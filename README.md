@@ -6,7 +6,7 @@
 
 A weather dashboard powered by **Google Apps Script**, **Google Sheets**, **Open-Meteo**, and a Python machine-learning pipeline developed in **Google Colab**.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20Dashboard-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white)](https://script.google.com/macros/s/AKfycbyJA6grCm47XUp_tQ3tCCjSmTuSNRfoYzdlvb4KLMlnS8qj5bCPM0RiguX5k4eYG3zJ/exec)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open%20Dashboard-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white)](https://script.google.com/macros/s/AKfycbyJA6grCm47XUp_tQ3tCCjSmTuSNRfoYzdlvb4KLMlnS8qj5bCPM0RiguX5k4eYG3zJ/exec)<br>
 [![Google Apps Script](https://img.shields.io/badge/Google%20Apps%20Script-Web%20App-4285F4?style=flat-square&logo=googleappsscript&logoColor=white)](https://developers.google.com/apps-script)
 [![Python](https://img.shields.io/badge/Python-ML%20Pipeline-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![Open-Meteo](https://img.shields.io/badge/Weather%20Data-Open--Meteo-0B8F87?style=flat-square)](https://open-meteo.com/)
