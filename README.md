@@ -224,6 +224,4 @@ Avoid committing `mlflow.db`, the full `mlartifacts/` directory, private spreads
 
 ---
 
-<div align="center">
- * Historical data → model training and evaluation → JSON export → parity testing → Apps Script inference → dashboard monitoring *
-</div>
+<p align="center"><i>Historical data → model training and evaluation → JSON export → parity testing → Apps Script inference → dashboard monitoring</i></p>
