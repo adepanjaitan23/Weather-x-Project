@@ -27,7 +27,7 @@ The current `weather-v2` model was developed for **Surabaya, East Java, Indonesi
 
 Open the deployed dashboard here:
 
-<div align="center">
+<div align="left">
 
 [![Launch Weather Intelligence Dashboard](assets/launch-dashboard-button.svg)](https://script.google.com/macros/s/AKfycbyJA6grCm47XUp_tQ3tCCjSmTuSNRfoYzdlvb4KLMlnS8qj5bCPM0RiguX5k4eYG3zJ/exec)
 
