@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Intelligence Dashboard</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc; /* slate-50 */
+    }
+    
+    /* Custom Scrollbar for tables */
+    .table-container::-webkit-scrollbar {
+      height: 8px;
+    }
+    .table-container::-webkit-scrollbar-track {
+      background: #f1f5f9; 
+      border-radius: 4px;
+    }
+    .table-container::-webkit-scrollbar-thumb {
+      background: #cbd5e1; 
+      border-radius: 4px;
+    }
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8; 
+    }
+
+    /* Loading Spinner Animation */
+    .spinner {
+      border: 3px solid rgba(59, 130, 246, 0.1);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-inner">
+          <i data-lucide="cloud-sun" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-slate-900 leading-tight">Weather Intelligence</h1>
+          <p class="text-xs text-slate-500 font-medium">Sistem Prediksi Cuaca Cerdas</p>
+        </div>
+      </div>
+      <div class="text-center sm:text-right text-xs text-slate-500">
+        <p id="top-status" class="font-medium text-slate-700 bg-slate-100 px-3 py-1 rounded-full inline-block mb-1">Menunggu pencarian lokasi</p>
+        <p>Sumber Data Utama: Open-Meteo</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8">
+    
+    <!-- Search Controls -->
+    <section class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+        
+        <div class="md:col-span-4">
+          <label for="city" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Cari Nama Kota</label>
+          <div class="relative">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+            <input type="text" id="city" value="Surabaya" placeholder="Contoh: Surabaya, Jakarta" 
+                   class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm"
+                   onkeydown="if(event.key==='Enter') loadCity()">
+          </div>
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="lat" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Garis Lintang (Lat)</label>
+          <input type="number" id="lat" placeholder="-7.2575" 
+                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm">
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="lon" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Garis Bujur (Lon)</label>
+          <input type="number" id="lon" placeholder="112.7521" 
+                 class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm">
+        </div>
+
+        <div class="md:col-span-4 flex gap-2">
+          <button id="city-btn" onclick="loadCity()" 
+                  class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors text-sm flex items-center justify-center gap-2">
+            Cari
+          </button>
+          <button id="coord-btn" onclick="loadCoordinates()" 
+                  class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-lg transition-colors text-sm">
+            Pakai Koordinat
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Notice -->
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start gap-3">
+      <i data-lucide="info" class="w-5 h-5 text-blue-600 shrink-0 mt-0.5"></i>
+      <div>
+        <h4 id="model-notice-title" class="text-sm font-bold text-blue-900">Menggunakan Sistem Standar</h4>
+        <p id="model-notice" class="text-sm text-blue-800 mt-1">Dashboard ini menampilkan cuaca dan perkiraan standar. Jika model kecerdasan buatan (AI) Anda dipasang, hasil prediksinya akan otomatis muncul di sini.</p>
+      </div>
+    </div>
+
+    <!-- Loader & Error -->
+    <div id="loading" class="hidden bg-white rounded-xl p-6 shadow-sm border border-slate-100 items-center justify-center gap-3">
+      <div class="spinner"></div>
+      <span class="text-sm font-medium text-slate-600">Mengambil data cuaca terbaru...</span>
+    </div>
+    
+    <div id="error" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-sm font-medium"></div>
+
+    <!-- Section Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4">
+      <div>
+        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Kondisi Saat Ini</p>
+        <h2 id="location-title" class="text-2xl font-bold text-slate-900">Pilih Lokasi</h2>
+        <p id="location-subtitle" class="text-sm text-slate-500 mt-1">Cari kota atau masukkan koordinat untuk melihat cuaca.</p>
+      </div>
+      <button id="refresh-btn" onclick="refreshCurrent()" disabled 
+              class="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium py-2 px-4 rounded-lg transition-colors text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Perbarui Data
+      </button>
+    </div>
+
+    <!-- Metrics Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform">
+          <i data-lucide="thermometer" class="w-24 h-24 text-orange-500"></i>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-sm font-semibold text-slate-500">Suhu Udara</span>
+          <div class="w-8 h-8 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center">
+            <i data-lucide="thermometer" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div id="metric-temp" class="text-3xl font-bold text-slate-800 mb-1">--°C</div>
+        <div id="metric-feels" class="text-sm text-slate-500">Terasa seperti --°C</div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform">
+          <i data-lucide="droplets" class="w-24 h-24 text-blue-500"></i>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-sm font-semibold text-slate-500">Kelembapan</span>
+          <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+            <i data-lucide="droplets" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div id="metric-humidity" class="text-3xl font-bold text-slate-800 mb-1">--%</div>
+        <div class="text-sm text-slate-500">Kadar air di udara</div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform">
+          <i data-lucide="cloud-rain" class="w-24 h-24 text-teal-500"></i>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-sm font-semibold text-slate-500">Curah Hujan</span>
+          <div class="w-8 h-8 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center">
+            <i data-lucide="cloud-rain" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div id="metric-rain" class="text-3xl font-bold text-slate-800 mb-1">-- mm</div>
+        <div id="metric-weather" class="text-sm text-slate-500 truncate">Kondisi belum tersedia</div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 transform translate-x-4 -translate-y-4 group-hover:scale-110 transition-transform">
+          <i data-lucide="wind" class="w-24 h-24 text-slate-400"></i>
+        </div>
+        <div class="flex justify-between items-center mb-4">
+          <span class="text-sm font-semibold text-slate-500">Angin</span>
+          <div class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center">
+            <i data-lucide="wind" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div id="metric-wind" class="text-3xl font-bold text-slate-800 mb-1">-- km/j</div>
+        <div id="metric-pressure" class="text-sm text-slate-500">Tekanan udara -- hPa</div>
+      </div>
+
+    </section>
+
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-6 border-t border-slate-200">
+      <div>
+        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Prediksi AI vs Standar</p>
+        <h2 class="text-xl font-bold text-slate-900">Prediksi Estimasi Beberapa Jam ke Depan</h2>
+      </div>
+      <span id="prediction-badge" class="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+        Sistem Standar
+      </span>
+    </div>
+
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="table-container overflow-x-auto">
+        <table class="w-full min-w-[650px] text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50 border-b border-slate-100">
+              <th class="py-3 px-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Estimasi Waktu ke Depan</th>
+              <th class="py-3 px-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Prediksi Suhu</th>
+              <th class="py-3 px-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Peluang Hujan</th>
+              <th class="py-3 px-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Pembanding (Standar)</th>
+              <th class="py-3 px-5 text-xs font-bold text-slate-500 uppercase tracking-wider">Sumber</th>
+            </tr>
+          </thead>
+          <tbody id="prediction-body" class="divide-y divide-slate-100">
+            <tr>
+              <td colspan="5" class="py-12 text-center text-slate-500 text-sm">
+                Data akan muncul setelah Anda mencari kota.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="pt-6 border-t border-slate-200">
+      <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Grafik Cuaca</p>
+      <h2 class="text-xl font-bold text-slate-900">Tren Perkembangan Suhu 24 Jam</h2>
+    </div>
+
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      
+      <!-- Chart 1: Forecast 24h -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+        <div class="mb-4">
+          <h3 class="text-base font-bold text-slate-800">Perkiraan Suhu & Hujan (24 Jam)</h3>
+          <p class="text-xs text-slate-500 mt-1">Garis = Suhu (°C), Batang = Peluang Hujan (%)</p>
+        </div>
+        <div class="relative h-64 w-full">
+          <canvas id="forecast-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Model vs API -->
+      <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100 flex flex-col">
+        <div class="flex justify-between items-start mb-4 gap-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-800">Perbandingan Prediksi AI vs Standar</h3>
+            <p class="text-xs text-slate-500 mt-1">Melihat seberapa jauh beda prediksi AI buatan kita dengan aplikasi umum.</p>
+          </div>
+          <span id="model-chart-pill" class="shrink-0 px-2.5 py-1 text-[10px] font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+            AI Belum Aktif
+          </span>
+        </div>
+        <div class="relative h-56 w-full grow">
+          <canvas id="model-chart"></canvas>
+        </div>
+        <p id="model-chart-empty" class="text-xs text-slate-400 mt-3 italic text-center">
+          Grafik perbandingan akan terlihat menarik jika AI (Machine Learning) Anda sudah terpasang.
+        </p>
+      </div>
+
+    </section>
+
+    <div class="pt-6 border-t border-slate-200">
+      <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Ringkasan AI</p>
+      <h2 class="text-xl font-bold text-slate-900 mb-1">Ringkasan Cuaca Hari Ini</h2>
+      <p class="text-sm text-slate-500">Daripada melihat grafik jam per jam yang membingungkan, AI kami telah merangkum 24 jam ke depan menjadi beberapa tema utama. Ini akan sangat membantu Anda menentukan kapan waktu terbaik untuk menjemur pakaian, bepergian, atau sekadar bersantai di rumah.</p>
+    </div>
+
+    <section id="cluster-list" class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div class="col-span-1 sm:col-span-3 bg-slate-50 rounded-xl p-8 border border-slate-200 border-dashed text-center text-slate-500 text-sm">
+        Pola cuaca akan tampil setelah data tersedia.
+      </div>
+    </section>
+
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-6 border-t border-slate-200">
+      <div>
+        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Cek Kualitas AI</p>
+        <h2 class="text-xl font-bold text-slate-900 mb-1">Akurasi Prediksi AI di Masa Lalu</h2>
+        <p class="text-sm text-slate-500 max-w-2xl">Mengecek apakah prediksi yang dibuat sistem kita beberapa hari lalu terbukti benar saat dicocokkan dengan data cuaca asli yang sudah terjadi.</p>
+      </div>
+      <button id="evaluate-btn" onclick="runEvaluation()" disabled 
+              class="shrink-0 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 font-semibold py-2 px-4 rounded-lg transition-colors text-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        <i data-lucide="check-circle" class="w-4 h-4"></i> Cek Akurasi Sekarang
+      </button>
+    </div>
+
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8">
+      
+      <!-- Evaluation Chart -->
+      <div class="lg:col-span-8 bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-100">
+        <div class="mb-4">
+          <h3 class="text-base font-bold text-slate-800">Grafik Prediksi vs Realita</h3>
+          <p class="text-xs text-slate-500 mt-1">Garis biru adalah tebakan kita sebelumnya, garis hijau adalah kejadian cuaca aslinya.</p>
+        </div>
+        
+        <div id="evaluation-empty" class="bg-slate-50 rounded-xl p-8 border border-slate-200 border-dashed text-center text-slate-500 text-sm h-48 flex items-center justify-center">
+          Belum ada riwayat prediksi yang bisa dinilai. Butuh waktu beberapa hari untuk mengumpulkan data riwayat.
+        </div>
+        
+        <div id="evaluation-chart-wrap" class="hidden relative h-56 w-full">
+          <canvas id="evaluation-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Evaluation Stats -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex-1">
+          <div class="flex items-start gap-3 mb-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+              <i data-lucide="target" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-700">Tingkat Kesalahan Suhu</h4>
+              <p class="text-xs text-slate-500 mb-2">(Meleset berapa derajat rata-rata?)</p>
+              <div class="text-2xl font-bold text-slate-900" id="eval-mae">-- <span class="text-sm font-normal text-slate-500">°C</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex-1">
+          <div class="flex items-start gap-3 mb-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <i data-lucide="cloud-lightning" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-700">Akurasi Tebak Hujan</h4>
+              <p class="text-xs text-slate-500 mb-2">(Skor Brier, mendekati 0 = sangat akurat)</p>
+              <div class="text-2xl font-bold text-slate-900" id="eval-brier">--</div>
+            </div>
+          </div>
+        </div>
+        
+        <p class="text-xs text-slate-400 text-center" id="eval-count">Belum ada evaluasi berjalan.</p>
+        
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+      <p>© 2026 Weather Intelligence Dashboard - adepanjaitan. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="https://github.com/adepanjaitan23/Weather-x-Project" target="_blank" class="text-blue-600 hover:underline">GitHub</a>
+        <span>Data dari <a href="https://open-meteo.com/" target="_blank" class="text-blue-600 hover:underline">Open-Meteo</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Inisialisasi ikon Lucide
+    lucide.createIcons();
+
+    let latestData = null;
+    let forecastChart = null;
+    let modelChart = null;
+    let evaluationChart = null;
+
+    // Helper untuk Preview/Mock Data agar tidak error di lingkungan luar App Script
+    const isAppScript = typeof google !== 'undefined' && google.script && google.script.run;
+
+    function setBusy(busy) {
+      document.getElementById('loading').style.display = busy ? 'flex' : 'none';
+      const btns = ['city-btn','coord-btn','refresh-btn','evaluate-btn'];
+      btns.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.disabled = busy || (id === 'refresh-btn' && !latestData) || (id === 'evaluate-btn' && !latestData);
+        }
+      });
+      document.getElementById('error').classList.add('hidden');
+    }
+
+    function showError(err) {
+      const msg = (err && err.message) ? err.message : String(err || 'Terjadi kesalahan tidak terduga.');
+      const el = document.getElementById('error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      el.classList.replace('bg-green-50', 'bg-red-50');
+      el.classList.replace('text-green-700', 'text-red-700');
+      el.classList.replace('border-green-200', 'border-red-200');
+    }
+
+    function showSuccessMsg(msg) {
+      const el = document.getElementById('error');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      el.classList.replace('bg-red-50', 'bg-green-50');
+      el.classList.replace('text-red-700', 'text-green-700');
+      el.classList.replace('border-red-200', 'border-green-200');
+    }
+
+    function loadCity() {
+      const city = document.getElementById('city').value.trim();
+      if (!city) return showError('Silakan masukkan nama kota terlebih dahulu.');
+      
+      setBusy(true);
+
+      if (isAppScript) {
+        google.script.run.withSuccessHandler(data => { setBusy(false); renderDashboard(data); })
+          .withFailureHandler(err => { setBusy(false); showError(err); })
+          .getWeatherByCity(city);
+      } else {
+        // Mock Response untuk Demo/Preview
+        setTimeout(() => { setBusy(false); renderDashboard(getMockData(city)); }, 1000);
+      }
+    }
+
+    function loadCoordinates() {
+      const lat = document.getElementById('lat').value;
+      const lon = document.getElementById('lon').value;
+      if (lat === '' || lon === '') return showError('Silakan isi kolom latitude dan longitude.');
+      
+      setBusy(true);
+
+      if (isAppScript) {
+        google.script.run.withSuccessHandler(data => { setBusy(false); renderDashboard(data); })
+          .withFailureHandler(err => { setBusy(false); showError(err); })
+          .getWeatherByCoordinates(Number(lat), Number(lon), `Koordinat ${Number(lat).toFixed(3)}, ${Number(lon).toFixed(3)}`);
+      } else {
+        setTimeout(() => { setBusy(false); renderDashboard(getMockData(`Koordinat ${lat}, ${lon}`)); }, 1000);
+      }
+    }
+
+    function refreshCurrent() {
+      if (!latestData) return loadCity();
+      setBusy(true);
+
+      if (isAppScript) {
+        google.script.run.withSuccessHandler(data => { setBusy(false); renderDashboard(data); })
+          .withFailureHandler(err => { setBusy(false); showError(err); })
+          .getWeatherByCoordinates(latestData.location.latitude, latestData.location.longitude, latestData.location.name);
+      } else {
+        setTimeout(() => { setBusy(false); renderDashboard(getMockData(latestData.location.name)); }, 1000);
+      }
+    }
+
+    function renderDashboard(data) {
+      latestData = data;
+      document.getElementById('refresh-btn').disabled = false;
+      document.getElementById('evaluate-btn').disabled = false;
+      
+      // Update Top Status
+      const dateStr = (data.lastUpdated || '').replace('T',' ').slice(0,19);
+      document.getElementById('top-status').textContent = `Diperbarui pada ${dateStr} (Waktu Server)`;
+      
+      // Update Title & Location Info
+      document.getElementById('location-title').textContent = data.location.name;
+      document.getElementById('location-subtitle').textContent = `Garis Lintang: ${Number(data.location.latitude).toFixed(4)} | Garis Bujur: ${Number(data.location.longitude).toFixed(4)} | Zona Waktu: ${data.location.timezone}`;
+      
+      // Fill Input coords
+      document.getElementById('lat').value = data.location.latitude;
+      document.getElementById('lon').value = data.location.longitude;
+      
+      // Update Current Metrics
+      const c = data.current;
+      document.getElementById('metric-temp').textContent = `${fmt(c.temperature, 1)}°C`;
+      document.getElementById('metric-feels').textContent = `Terasa seperti ${fmt(c.apparentTemperature, 1)}°C`;
+      document.getElementById('metric-humidity').textContent = `${fmt(c.humidity, 0)}%`;
+      document.getElementById('metric-rain').textContent = `${fmt(c.precipitation, 1)} mm`;
+      document.getElementById('metric-weather').textContent = `${weatherName(c.weatherCode)} (${shortTime(c.time)})`;
+      document.getElementById('metric-wind').textContent = `${fmt(c.wind, 1)} km/j`;
+      document.getElementById('metric-pressure').textContent = `Tekanan Udara: ${fmt(c.pressure, 0)} hPa`;
+      
+      // Update ML/API Badges and Notices
+      const badge = document.getElementById('prediction-badge');
+      const noticeTitle = document.getElementById('model-notice-title');
+      const noticeText = document.getElementById('model-notice');
+      
+      if (data.mlModelLoaded) {
+        badge.textContent = 'Prediksi AI Aktif';
+        badge.className = 'px-3 py-1 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200';
+        noticeTitle.textContent = `Sistem AI Aktif: ${data.modelVersion}`;
+        noticeText.textContent = 'Dashboard menampilkan prediksi dari kecerdasan buatan (Machine Learning) yang dipasang. Aplikasi standar dijadikan sebagai pembanding.';
+      } else {
+        badge.textContent = 'Sistem Standar';
+        badge.className = 'px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-600 border border-slate-200';
+        noticeTitle.textContent = 'Menggunakan Sistem Standar (Open-Meteo)';
+        noticeText.textContent = 'Belum ada model AI yang terdeteksi. Sistem menampilkan data cuaca standar. Pasang file model di Google Drive Anda untuk mengaktifkan prediksi cerdas.';
+      }
+
+      // Render Sub-components
+      renderPredictions(data);
+      renderForecast(data);
+      renderModelComparison(data);
+      renderClusters(data.clusters || []);
+      loadEvaluationHistory();
+    }
+
+    function fmt(value, decimals) {
+      if (value === null || value === undefined || value === '' || !Number.isFinite(Number(value))) return '—';
+      return Number(value).toFixed(decimals === undefined ? 1 : decimals);
+    }
+    
+    function safeText(v) { 
+      return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); 
+    }
+    
+    function shortTime(s) { 
+      // extract time format HH:MM from ISO string
+      if(!s) return '';
+      const parts = s.split('T');
+      if(parts.length > 1) return parts[1].slice(0,5);
+      return s.slice(5,16); 
+    }
+    
+    function weatherName(code) {
+      const c = Number(code);
+      if ([0].includes(c)) return 'Cerah';
+      if ([1,2].includes(c)) return 'Cerah Berawan';
+      if ([3].includes(c)) return 'Berawan / Mendung';
+      if ([45,48].includes(c)) return 'Berkabut';
+      if ([51,53,55,56,57].includes(c)) return 'Gerimis';
+      if ([61,63,65,66,67,80,81,82].includes(c)) return 'Hujan';
+      if ([71,73,75,77,85,86].includes(c)) return 'Turun Salju';
+      if ([95,96,99].includes(c)) return 'Badai Petir';
+      return 'Kondisi Tidak Diketahui';
+    }
+
+    function renderPredictions(data) {
+      const tbody = document.getElementById('prediction-body');
+      if (!data.predictions || !data.predictions.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-slate-500 text-sm bg-slate-50 border-t border-slate-100 border-dashed">Tidak ada data prediksi.</td></tr>'; 
+        return;
+      }
+      
+      tbody.innerHTML = data.predictions.map(p => {
+        const isML = data.mlModelLoaded;
+        const sourceBadge = isML 
+          ? `<span class="bg-emerald-50 text-emerald-700 px-2 py-1 rounded text-[10px] font-bold border border-emerald-100">${safeText(p.source)}</span>`
+          : `<span class="bg-slate-100 text-slate-600 px-2 py-1 rounded text-[10px] font-bold border border-slate-200">${safeText(p.source)}</span>`;
+          
+        return `<tr class="hover:bg-slate-50 transition-colors">
+            <td class="py-3 px-5 text-sm font-semibold text-slate-800">+${p.horizon} Jam</td>
+            <td class="py-3 px-5 text-sm font-bold text-slate-800">${fmt(p.temperature,1)}°C</td>
+            <td class="py-3 px-5 text-sm font-bold text-slate-800">${fmt(p.rainProbability,0)}%</td>
+            <td class="py-3 px-5 text-xs text-slate-500">${fmt(p.apiTemperature,1)}°C / ${fmt(p.apiRainProbability,0)}%</td>
+            <td class="py-3 px-5">${sourceBadge}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    function renderForecast(data) {
+      const rows = data.forecast24h || [];
+      if (forecastChart) forecastChart.destroy();
+      
+      const ctx = document.getElementById('forecast-chart').getContext('2d');
+      forecastChart = new Chart(ctx, {
+        type: 'bar',
+        data: { 
+          labels: rows.map(r => shortTime(r.time)), 
+          datasets: [
+            { 
+              type: 'line', 
+              label: 'Suhu (°C)', 
+              data: rows.map(r => r.temperature), 
+              borderColor: '#2563eb', // blue-600
+              backgroundColor: '#2563eb',
+              borderWidth: 2, 
+              pointRadius: 2, 
+              pointBackgroundColor: '#fff',
+              tension: 0.4, 
+              yAxisID: 'y' 
+            },
+            { 
+              type: 'bar', 
+              label: 'Peluang Hujan (%)', 
+              data: rows.map(r => r.rainProbability), 
+              backgroundColor: 'rgba(14, 165, 233, 0.2)', // sky-500 with opacity
+              borderColor: 'rgba(14, 165, 233, 0.5)',
+              borderWidth: 1, 
+              borderRadius: 4, 
+              yAxisID: 'y1' 
+            }
+          ]
+        },
+        options: { 
+          responsive: true, 
+          maintainAspectRatio: false, 
+          interaction: { mode: 'index', intersect: false }, 
+          plugins: { 
+            legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { family: "'Inter', sans-serif", size: 11 } } },
+            tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleFont: { family: "'Inter', sans-serif" }, bodyFont: { family: "'Inter', sans-serif" }, padding: 10, cornerRadius: 8 }
+          }, 
+          scales: {
+            x: { 
+              ticks: { maxTicksLimit: 8, font: { family: "'Inter', sans-serif", size: 10 }, color: '#64748b' }, 
+              grid: { display: false } 
+            },
+            y: { 
+              position: 'left', 
+              title: { display: true, text: 'Suhu (°C)', color: '#64748b', font: { size: 10 } }, 
+              ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#64748b' }, 
+              grid: { color: '#f1f5f9' },
+              suggestedMin: Math.min(...rows.map(r=>r.temperature)) - 2,
+              suggestedMax: Math.max(...rows.map(r=>r.temperature)) + 2
+            },
+            y1: { 
+              position: 'right', 
+              min: 0, 
+              max: 100, 
+              title: { display: true, text: 'Hujan (%)', color: '#64748b', font: { size: 10 } }, 
+              ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#64748b' }, 
+              grid: { display: false } 
+            }
+          }
+        }
+      });
+    }
+
+    function renderModelComparison(data) {
+      const preds = data.predictions || [];
+      if (modelChart) modelChart.destroy();
+      
+      const ctx = document.getElementById('model-chart').getContext('2d');
+      modelChart = new Chart(ctx, {
+        type: 'line', 
+        data: {
+          labels: preds.map(p => `+${p.horizon} Jam`),
+          datasets: [
+            {
+              label: data.mlModelLoaded ? 'AI Buatan Kita' : 'Prediksi Standar',
+              data: preds.map(p => p.temperature),
+              borderColor: data.mlModelLoaded ? '#10b981' : '#3b82f6', // emerald-500 or blue-500
+              backgroundColor: data.mlModelLoaded ? '#10b981' : '#3b82f6',
+              pointRadius: 4,
+              pointBackgroundColor: '#fff',
+              borderWidth: 2,
+              tension: 0.3
+            },
+            {
+              label: 'Aplikasi Open-Meteo',
+              data: preds.map(p => p.apiTemperature),
+              borderColor: '#94a3b8', // slate-400
+              backgroundColor: '#94a3b8',
+              pointRadius: 4,
+              borderWidth: 2,
+              tension: 0.3,
+              borderDash: [5, 5]
+            }
+          ]
+        }, 
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { family: "'Inter', sans-serif", size: 11 } } },
+            tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleFont: { family: "'Inter', sans-serif" }, bodyFont: { family: "'Inter', sans-serif" }, padding: 10, cornerRadius: 8 }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#64748b' } },
+            y: { title: { display: true, text: 'Suhu (°C)', color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' }, ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#64748b' } }
+          }
+        }
+      });
+
+      const pill = document.getElementById('model-chart-pill');
+      if (data.mlModelLoaded) {
+        pill.textContent = 'AI Sedang Bekerja';
+        pill.className = 'shrink-0 px-2.5 py-1 text-[10px] font-bold rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200';
+        document.getElementById('model-chart-empty').textContent = 'Melihat selisih antara kepintaran AI buatan kita dibandingkan layanan standar internasional.';
+      } else {
+        pill.textContent = 'AI Belum Aktif';
+        pill.className = 'shrink-0 px-2.5 py-1 text-[10px] font-bold rounded-full bg-slate-100 text-slate-500 border border-slate-200';
+        document.getElementById('model-chart-empty').textContent = 'Grafik akan terlihat menarik jika Machine Learning/AI sudah Anda hubungkan.';
+      }
+    }
+
+    function renderClusters(clusters) {
+      const root = document.getElementById('cluster-list');
+      if (!clusters.length) { 
+        root.innerHTML = '<div class="col-span-1 sm:col-span-3 bg-slate-50 rounded-xl p-8 border border-slate-200 border-dashed text-center text-slate-500 text-sm">Pola cuaca tidak tersedia untuk saat ini.</div>'; 
+        return; 
+      }
+      
+      root.innerHTML = clusters.map((c, i) => {
+        // Logika sederhana untuk Ikon dan Insight AI berdasarkan data cuaca
+        let icon = 'cloud';
+        let iconBg = 'bg-slate-100 text-slate-600';
+        let insight = 'Kondisi cuaca normal, aman untuk beraktivitas santai.';
+
+        if (c.averageRainProbability > 40) {
+          icon = 'cloud-rain';
+          iconBg = 'bg-blue-100 text-blue-600';
+          insight = '☔ Sedia payung atau jas hujan! Waktu ini sangat rawan turun hujan.';
+        } else if (c.averageTemperature > 31) {
+          icon = 'sun';
+          iconBg = 'bg-orange-100 text-orange-600';
+          insight = '☀ Cuaca cukup terik. Waktu yang pas untuk menjemur pakaian di luar.';
+        } else if (c.averageTemperature < 26) {
+          icon = 'cloud';
+          iconBg = 'bg-indigo-100 text-indigo-600';
+          insight = '☁ Cuaca cenderung sejuk dan teduh. Sangat nyaman untuk bersantai santai.';
+        } else if (c.averageWind > 15) {
+          icon = 'wind';
+          iconBg = 'bg-teal-100 text-teal-600';
+          insight = '💨 Angin bertiup lumayan kencang. Hati-hati jika berkendara roda dua.';
+        }
+
+        // Tampilkan jam spesifik jika ada di data, jika tidak fallback ke jumlah jam
+        const hasTime = !!c.timeDesc;
+        const timeDisplay = hasTime ? c.timeDesc : `Berlangsung ${c.count} Jam`;
+        const timeSub = 'BERLAKU PADA';
+        
+        return `
+        <article class="bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow flex flex-col overflow-hidden">
+          
+          <!-- Header: Waktu Kejadian -->
+          <div class="bg-slate-50 p-4 border-b border-slate-100 flex items-center gap-3">
+             <div class="w-10 h-10 rounded-full ${iconBg} flex items-center justify-center shrink-0">
+               <i data-lucide="${icon}" class="w-5 h-5"></i>
+             </div>
+             <div>
+               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">${timeSub}</p>
+               <h4 class="text-sm font-bold text-slate-800">${timeDisplay}</h4>
+             </div>
+          </div>
+          
+          <!-- Isi: Label & Tips AI -->
+          <div class="p-5 flex-1 flex flex-col">
+            <h3 class="text-base font-bold text-slate-800 mb-2">${safeText(c.label)}</h3>
+            <div class="text-xs text-slate-600 leading-relaxed mb-5 flex-1 bg-blue-50/50 p-3 rounded-lg border border-blue-100/50 flex items-start gap-2">
+              <span class="text-blue-500 mt-0.5"><i data-lucide="lightbulb" class="w-4 h-4"></i></span>
+              <span>${insight}</span>
+            </div>
+            
+            <!-- Grid Statistik (Dilengkapi Icon) -->
+            <div class="grid grid-cols-2 gap-x-3 gap-y-4 pt-4 border-t border-slate-100">
+              <div class="flex items-center gap-2">
+                <i data-lucide="thermometer" class="w-4 h-4 text-orange-400"></i>
+                <div>
+                  <span class="block text-[10px] text-slate-400 uppercase tracking-wider leading-none mb-1">Suhu Rata-rata</span>
+                  <b class="text-sm text-slate-700 leading-none">${fmt(c.averageTemperature,1)}°C</b>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="cloud-rain" class="w-4 h-4 text-blue-400"></i>
+                <div>
+                  <span class="block text-[10px] text-slate-400 uppercase tracking-wider leading-none mb-1">Peluang Hujan</span>
+                  <b class="text-sm text-slate-700 leading-none">${fmt(c.averageRainProbability,0)}%</b>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="droplets" class="w-4 h-4 text-teal-400"></i>
+                <div>
+                  <span class="block text-[10px] text-slate-400 uppercase tracking-wider leading-none mb-1">Kelembapan</span>
+                  <b class="text-sm text-slate-700 leading-none">${fmt(c.averageHumidity,0)}%</b>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <i data-lucide="wind" class="w-4 h-4 text-slate-400"></i>
+                <div>
+                  <span class="block text-[10px] text-slate-400 uppercase tracking-wider leading-none mb-1">Kecepatan Angin</span>
+                  <b class="text-sm text-slate-700 leading-none">${fmt(c.averageWind,1)} km/j</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </article>
+      `}).join('');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    function loadEvaluationHistory() {
+      if (!latestData) return;
+      
+      if (isAppScript) {
+        google.script.run.withSuccessHandler(renderEvaluation).withFailureHandler(() => {})
+          .getEvaluationHistory(latestData.location.latitude, latestData.location.longitude, latestData.mlModelLoaded ? latestData.modelVersion : 'open-meteo-baseline');
+      } else {
+        // Mock Evaluation Data
+        setTimeout(() => { renderEvaluation(getMockEvaluation()); }, 500);
+      }
+    }
+
+    function renderEvaluation(result) {
+      document.getElementById('eval-mae').textContent = result.mae == null ? '—' : Number(result.mae).toFixed(2);
+      document.getElementById('eval-brier').textContent = result.brier == null ? '—' : Number(result.brier).toFixed(3);
+      document.getElementById('eval-count').innerHTML = result.count 
+        ? `Diukur dari <b>${result.count} prediksi lalu</b> yang sudah terbukti kejadiannya.` 
+        : 'Sistem masih mengumpulkan data prediksi... Belum bisa dinilai.';
+      
+      const empty = document.getElementById('evaluation-empty');
+      const wrap = document.getElementById('evaluation-chart-wrap');
+      
+      if (!result.points || !result.points.length) {
+        empty.classList.remove('hidden'); 
+        wrap.classList.add('hidden');
+        if (evaluationChart) { evaluationChart.destroy(); evaluationChart = null; }
+        return;
+      }
+      
+      empty.classList.add('hidden'); 
+      wrap.classList.remove('hidden');
+      
+      const points = result.points.slice(-40);
+      if (evaluationChart) evaluationChart.destroy();
+      
+      const ctx = document.getElementById('evaluation-chart').getContext('2d');
+      evaluationChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: points.map(p => `${shortTime(p.time)} (+${p.horizon}j)`),
+          datasets: [
+            {
+              label: 'Tebakan Kita',
+              data: points.map(p => p.predictedTemperature),
+              borderColor: '#3b82f6', // blue-500
+              backgroundColor: '#3b82f6',
+              pointRadius: 2,
+              borderWidth: 2,
+              tension: 0.3
+            },
+            {
+              label: 'Realita Cuaca Asli',
+              data: points.map(p => p.referenceTemperature),
+              borderColor: '#10b981', // emerald-500
+              backgroundColor: '#10b981',
+              pointRadius: 2,
+              borderWidth: 2,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { family: "'Inter', sans-serif", size: 11 } } },
+            tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleFont: { family: "'Inter', sans-serif" }, bodyFont: { family: "'Inter', sans-serif" }, padding: 10, cornerRadius: 8 }
+          },
+          scales: {
+            x: { ticks: { maxTicksLimit: 7, font: { family: "'Inter', sans-serif", size: 9 }, color: '#94a3b8' }, grid: { display: false } },
+            y: { title: { display: true, text: 'Suhu (°C)', color: '#64748b', font: { size: 10 } }, grid: { color: '#f1f5f9' }, ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#64748b' } }
+          }
+        }
+      });
+    }
+
+    function runEvaluation() {
+      if (!latestData) return;
+      setBusy(true);
+      
+      if (isAppScript) {
+        google.script.run.withSuccessHandler(result => {
+          setBusy(false);
+          showSuccessMsg(result.message || 'Evaluasi selesai. Sistem telah mencocokkan riwayat prediksi dengan kenyataan.');
+          loadEvaluationHistory();
+        }).withFailureHandler(err => { setBusy(false); showError(err); })
+          .evaluateHistoricalPredictions(latestData.location.latitude, latestData.location.longitude);
+      } else {
+        setTimeout(() => {
+          setBusy(false);
+          showSuccessMsg('Berhasil memeriksa riwayat! (Ini adalah simulasi).');
+          loadEvaluationHistory();
+        }, 1000);
+      }
+    }
+
+    function getMockData(queryName) {
+      const isML = Math.random() > 0.5; // Randomly show ML active or not for demo
+      const baseTemp = 28 + Math.random() * 5;
+      
+      const forecast = Array.from({length: 24}).map((_, i) => {
+        const h = (new Date().getHours() + i) % 24;
+        const time = `2026-10-15T${h.toString().padStart(2, '0')}:00`;
+        return {
+          time: time,
+          temperature: baseTemp + Math.sin(i/3) * 3 + Math.random(),
+          rainProbability: Math.max(0, Math.min(100, (Math.sin(i/4) * 100) + (Math.random()*20)))
+        };
+      });
+
+      return {
+        location: { name: queryName, latitude: -7.25 + Math.random(), longitude: 112.75 + Math.random(), timezone: "Asia/Jakarta" },
+        lastUpdated: new Date().toISOString(),
+        current: { 
+          temperature: baseTemp, apparentTemperature: baseTemp + 2, 
+          humidity: 60 + Math.random() * 30, precipitation: Math.random() > 0.7 ? 2.5 : 0, 
+          weatherCode: Math.random() > 0.5 ? 1 : 61, wind: 10 + Math.random()*10, pressure: 1010 + Math.random()*5 
+        },
+        mlModelLoaded: isML,
+        modelVersion: "Keras-Model-v2.1",
+        predictions: [1, 3, 6, 24].map(h => ({
+          horizon: h,
+          targetTime: `2026-10-15T${(new Date().getHours() + h) % 24}:00`,
+          temperature: baseTemp + Math.random()*2,
+          rainProbability: Math.random()*50,
+          apiTemperature: baseTemp + Math.random()*2.5,
+          apiRainProbability: Math.random()*60,
+          source: isML ? "Prediksi AI v2" : "Open-Meteo"
+        })),
+        forecast24h: forecast,
+        clusters: [
+          { id: 0, count: 5, timeDesc: "Pukul 11.00 - 15.00", label: "Panas Terik & Kering", averageTemperature: 34.5, averageRainProbability: 5, averageHumidity: 45, averageWind: 15 },
+          { id: 1, count: 6, timeDesc: "Pukul 16.00 - 21.00", label: "Rawan Hujan Sore", averageTemperature: 28.2, averageRainProbability: 65, averageHumidity: 80, averageWind: 8 },
+          { id: 2, count: 13, timeDesc: "Pukul 22.00 - 10.00", label: "Sejuk Malam & Pagi", averageTemperature: 25.5, averageRainProbability: 10, averageHumidity: 90, averageWind: 5 }
+        ]
+      };
+    }
+
+    function getMockEvaluation() {
+      const points = Array.from({length: 15}).map((_, i) => ({
+        time: `2026-10-${String(10+i).padStart(2,'0')}T12:00`,
+        horizon: 24,
+        predictedTemperature: 30 + Math.random()*3,
+        referenceTemperature: 30 + Math.random()*3
+      }));
+      
+      return {
+        mae: 0.85,
+        brier: 0.12,
+        count: 15,
+        points: points
+      };
+    }
+
+    window.addEventListener('load', loadCity);
+    
+    // Perbaikan interval refresh otomatis (setiap 15 menit)
+    window.setInterval(() => { 
+      if (latestData && !document.hidden) refreshCurrent(); 
+    }, 15 * 60 * 1000);
+
+  </script>
+</body>
+</html>
