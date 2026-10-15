@@ -1,6 +1,6 @@
 <div align="center">
 
-🌦️ Weather Intelligence Dashboard
+# 🌦️ Weather Intelligence Dashboard
 Real-Time Weather Forecasting · Gradient Boosting · K-Means Clustering · Model Evaluation
 A weather dashboard built with Google Apps Script, Google Sheets, Open-Meteo, and a Python ML pipeline in Google Colab.
 🚀 Live Demo · Features · Architecture · Model Results · Installation · Limitations
