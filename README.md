@@ -225,9 +225,5 @@ Avoid committing `mlflow.db`, the full `mlartifacts/` directory, private spreads
 ---
 
 <div align="center">
-
-**Built by [adepanjaitan23](https://github.com/adepanjaitan23)**
-
 *Historical data → model training and evaluation → JSON export → parity testing → Apps Script inference → dashboard monitoring*
-
 </div>
