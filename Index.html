@@ -104,6 +104,15 @@
     .aqi-insight-icon { flex:none; display:grid; place-items:center; min-width:28px; height:28px; padding:0 4px; border-radius:9px; background:#dbeafe; color:#1d4ed8; font-size:10px; font-weight:900; }
     .dark .aqi-insight-icon { background:rgba(30,64,175,.35); color:#93c5fd; }
     
+    /* Custom Expand (Accordion) Styling */
+    details.custom-expand summary { list-style: none; }
+    details.custom-expand summary::-webkit-details-marker { display: none; }
+    details.custom-expand .expand-icon { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    details.custom-expand[open] .expand-icon { transform: rotate(180deg); }
+    
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in-down { animation: fadeInDown 0.3s ease-out forwards; }
+    
     @media(max-width:640px) { .aqi-scale-labels { font-size:8px; } .aqi-chart-wrap { height:230px; } }
   </style>
 </head>
@@ -326,8 +335,16 @@
           <div class="aqi-pollutant"><span class="aqi-pollutant-label">UV Index</span><b id="aqi-uv" class="aqi-pollutant-value">—</b><small class="aqi-pollutant-unit">indeks</small></div>
         </div>
 
-        <div id="aqi-advice" class="aqi-advice mt-5">Data kualitas udara akan muncul setelah lokasi dipilih.</div>
-        <p id="aqi-meta" class="aqi-meta mt-3">Sumber: Open-Meteo Air Quality API · prakiraan atmosfer umum.</p>
+        <details class="custom-expand group mt-5">
+          <summary class="flex items-center justify-start gap-2.5 py-2.5 px-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-[13px] font-semibold text-slate-700 dark:text-slate-300 rounded-xl transition-colors cursor-pointer select-none border border-slate-200 dark:border-slate-700/50">
+            <i data-lucide="info" class="w-4 h-4 text-blue-500"></i> Saran & Informasi Tambahan
+            <i data-lucide="chevron-down" class="w-4 h-4 ml-auto expand-icon text-slate-400"></i>
+          </summary>
+          <div class="pt-4 space-y-3 animate-fade-in-down">
+            <div id="aqi-advice" class="aqi-advice m-0">Data kualitas udara akan muncul setelah lokasi dipilih.</div>
+            <p id="aqi-meta" class="aqi-meta m-0">Sumber: Open-Meteo Air Quality API · prakiraan atmosfer umum.</p>
+          </div>
+        </details>
       </article>
 
       <!-- AQI forecast and insight -->
@@ -346,9 +363,17 @@
         </div>
         <div id="aqi-chart-wrap" class="aqi-chart-wrap hidden mt-2"><canvas id="aqi-chart"></canvas></div>
         
-        <div id="aqi-insights" class="aqi-insights pt-2">
-          <div class="aqi-empty">Insight kualitas udara akan muncul setelah data tersedia.</div>
-        </div>
+        <details class="custom-expand group mt-5">
+          <summary class="flex items-center justify-start gap-2.5 py-2.5 px-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 text-[13px] font-semibold text-slate-700 dark:text-slate-300 rounded-xl transition-colors cursor-pointer select-none border border-slate-200 dark:border-slate-700/50">
+            <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i> Insight Kualitas Udara
+            <i data-lucide="chevron-down" class="w-4 h-4 ml-auto expand-icon text-slate-400"></i>
+          </summary>
+          <div class="pt-4 animate-fade-in-down">
+            <div id="aqi-insights" class="aqi-insights m-0">
+              <div class="aqi-empty">Insight kualitas udara akan muncul setelah data tersedia.</div>
+            </div>
+          </div>
+        </details>
       </article>
     </section>
 
