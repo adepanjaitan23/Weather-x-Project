@@ -57,9 +57,8 @@
       transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
     }
 
-
     /* AQI section: designed to match the existing Tailwind dashboard and dark mode. */
-    .aqi-category { display:inline-flex; align-items:center; padding:0.4rem 0.7rem; border-radius:999px; font-size:0.7rem; line-height:1.25; font-weight:800; max-width:100%; }
+    .aqi-category { display:inline-flex; align-items:center; padding:0.4rem 0.7rem; border-radius:999px; font-size:0.7rem; line-height:1.25; font-weight:800; max-width:100%; text-align: center;}
     .aqi-good { background:#dcfce7; color:#166534; }
     .aqi-moderate { background:#fef3c7; color:#92400e; }
     .aqi-sensitive { background:#ffedd5; color:#9a3412; }
@@ -67,6 +66,7 @@
     .aqi-very-unhealthy { background:#ede9fe; color:#5b21b6; }
     .aqi-hazardous { background:#fce7f3; color:#9d174d; }
     .aqi-unavailable { background:#e2e8f0; color:#475569; }
+    
     .dark .aqi-good { background:rgba(22,101,52,.35); color:#86efac; }
     .dark .aqi-moderate { background:rgba(146,64,14,.35); color:#fde68a; }
     .dark .aqi-sensitive { background:rgba(154,52,18,.35); color:#fdba74; }
@@ -74,32 +74,37 @@
     .dark .aqi-very-unhealthy { background:rgba(91,33,182,.35); color:#c4b5fd; }
     .dark .aqi-hazardous { background:rgba(157,23,77,.35); color:#f9a8d4; }
     .dark .aqi-unavailable { background:#334155; color:#cbd5e1; }
+    
     .aqi-scale { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:4px; margin:15px 0 6px; }
     .aqi-scale span { height:7px; border-radius:999px; }
-    .aqi-scale-labels { display:flex; justify-content:space-between; gap:5px; color:#64748b; font-size:9px; line-height:1.3; }
+    .aqi-scale-labels { display:flex; justify-content:space-between; gap:5px; color:#64748b; font-size:9px; line-height:1.3; font-weight: 600;}
     .dark .aqi-scale-labels { color:#94a3b8; }
+    
     .aqi-pollutant { min-width:0; padding:11px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; }
     .dark .aqi-pollutant { border-color:#334155; background:#020617; }
-    .aqi-pollutant-label { display:block; font-size:10px; color:#64748b; margin-bottom:5px; }
+    .aqi-pollutant-label { display:block; font-size:10px; font-weight: 700; color:#64748b; margin-bottom:5px; }
     .dark .aqi-pollutant-label { color:#94a3b8; }
-    .aqi-pollutant-value { font-size:1rem; font-weight:800; color:#0f172a; letter-spacing:-.3px; }
+    .aqi-pollutant-value { font-size:1.1rem; font-weight:800; color:#0f172a; letter-spacing:-.3px; }
     .dark .aqi-pollutant-value { color:#f8fafc; }
-    .aqi-pollutant-unit { font-size:9px; color:#64748b; margin-left:2px; }
+    .aqi-pollutant-unit { font-size:9px; font-weight: 600; color:#64748b; margin-left:2px; }
     .dark .aqi-pollutant-unit { color:#94a3b8; }
-    .aqi-advice { border:1px solid #dbeafe; background:#eff6ff; color:#1e3a8a; border-radius:12px; padding:12px 13px; font-size:12px; line-height:1.6; }
+    
+    .aqi-advice { border:1px solid #dbeafe; background:#eff6ff; color:#1e3a8a; border-radius:12px; padding:12px 13px; font-size:12px; font-weight: 500; line-height:1.6; }
     .dark .aqi-advice { border-color:rgba(30,64,175,.6); background:rgba(30,58,138,.22); color:#bfdbfe; }
-    .aqi-meta { color:#64748b; font-size:10px; line-height:1.5; }
+    .aqi-meta { color:#64748b; font-size:10px; font-weight: 500; line-height:1.5; }
     .dark .aqi-meta { color:#94a3b8; }
     .aqi-chart-wrap { position:relative; height:250px; }
-    .aqi-empty { padding:15px; border:1px dashed #cbd5e1; border-radius:12px; color:#64748b; background:#f8fafc; font-size:12px; line-height:1.5; }
+    
+    .aqi-empty { padding:15px; border:1px dashed #cbd5e1; border-radius:12px; color:#64748b; background:#f8fafc; font-size:12px; font-weight: 500; line-height:1.5; text-align: center; }
     .dark .aqi-empty { border-color:#475569; background:#020617; color:#94a3b8; }
+    
     .aqi-insights { display:grid; gap:8px; margin-top:14px; }
-    .aqi-insight { display:flex; align-items:flex-start; gap:10px; padding:11px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; color:#334155; font-size:11px; line-height:1.55; }
+    .aqi-insight { display:flex; align-items:flex-start; gap:10px; padding:12px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; color:#334155; font-size:11.5px; font-weight: 500; line-height:1.55; }
     .dark .aqi-insight { border-color:#334155; background:#020617; color:#cbd5e1; }
     .aqi-insight-icon { flex:none; display:grid; place-items:center; min-width:28px; height:28px; padding:0 4px; border-radius:9px; background:#dbeafe; color:#1d4ed8; font-size:10px; font-weight:900; }
     .dark .aqi-insight-icon { background:rgba(30,64,175,.35); color:#93c5fd; }
+    
     @media(max-width:640px) { .aqi-scale-labels { font-size:8px; } .aqi-chart-wrap { height:230px; } }
-
   </style>
 </head>
 
@@ -117,7 +122,7 @@
           </div>
           <div>
             <h1 class="text-lg font-extrabold leading-tight tracking-tight">Weather Intelligence</h1>
-            <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Real-time weather · AQI insights · ML prediction · Smart Clusters</p>
+            <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Real-time weather · AQI insights · ML prediction</p>
           </div>
         </div>
         
@@ -127,15 +132,15 @@
         </button>
       </div>
 
+      <!-- Header Meta & Desktop Toggle -->
       <div class="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
         <div class="text-left sm:text-right text-[11px] text-slate-400 flex flex-col gap-1 w-full sm:w-auto">
           <span id="top-status" class="font-semibold text-slate-200 bg-slate-800 px-3 py-1 rounded-full inline-block border border-slate-700 text-center sm:text-right">
             Menunggu pencarian...
           </span>
-          <span class="text-center sm:text-right">Cuaca &amp; kualitas udara: Open-Meteo</span>
+          <span class="text-center sm:text-right">Cuaca & kualitas udara: Open-Meteo</span>
         </div>
         
-        <!-- Desktop Dark Mode Toggle -->
         <button onclick="toggleDarkMode()" class="hidden sm:flex p-2.5 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700 items-center justify-center active:scale-95 transition-all group" title="Ubah Mode Tampilan">
           <i data-lucide="moon" id="desktop-theme-icon" class="w-5 h-5 group-hover:text-blue-400 transition-colors"></i>
         </button>
@@ -143,9 +148,9 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full space-y-8">
     
+    <!-- Controls Section -->
     <section class="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
         
@@ -186,7 +191,7 @@
 
     <!-- Info Notice -->
     <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/50 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 text-blue-900 dark:text-blue-300">
-      <i data-lucide="info" class="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0"></i>
+      <i data-lucide="info" class="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5 sm:mt-0"></i>
       <div class="text-[13px] leading-relaxed">
         <strong id="model-notice-title" class="font-bold block sm:inline">Prakiraan Open-Meteo digunakan.</strong>
         <span id="model-notice">Data ini dihitung oleh model cuaca dan tidak selalu berasal dari alat ukur di stasiun cuaca setempat.</span>
@@ -196,7 +201,7 @@
     <!-- Loader & Error Messages -->
     <div id="loading" class="hidden bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
       <div class="spinner"></div>
-      <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">Mengambil data cuaca, kualitas udara, dan prediksi...</span>
+      <span class="text-sm font-semibold text-slate-600 dark:text-slate-300">Mengambil data cuaca, kualitas udara, dan memproses AI...</span>
     </div>
     <div id="error" class="hidden p-4 rounded-2xl text-sm font-semibold text-center sm:text-left"></div>
 
@@ -279,10 +284,12 @@
         <p class="text-[10px] sm:text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
           <i data-lucide="wind" class="w-3.5 h-3.5"></i> Air Quality Intelligence
         </p>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Kualitas Udara &amp; Air Quality Index</h2>
-        <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">Pantau US AQI, konsentrasi polutan, UV Index, dan perubahan kualitas udara yang diperkirakan dalam 24 jam.</p>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Kualitas Udara & AQI</h2>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">Pantau US AQI, konsentrasi polutan, UV Index, dan perubahan kualitas udara yang diperkirakan dalam 24 jam ke depan.</p>
       </div>
-      <span id="aqi-source-badge" class="px-3 py-1.5 text-xs font-bold rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0">Open-Meteo Air Quality</span>
+      <span id="aqi-source-badge" class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 shrink-0">
+        Open-Meteo Air Quality
+      </span>
     </div>
 
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -300,10 +307,10 @@
           <div>
             <div class="text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Current US AQI</div>
             <div id="aqi-value" class="text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none my-2">—</div>
-            <div id="aqi-european" class="text-xs text-slate-500 dark:text-slate-400">European AQI: —</div>
+            <div id="aqi-european" class="text-xs text-slate-500 dark:text-slate-400 font-medium">European AQI: —</div>
           </div>
-          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center shrink-0">
-            <i data-lucide="wind" class="w-7 h-7"></i>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50 flex items-center justify-center shrink-0 shadow-sm">
+            <i data-lucide="leaf" class="w-7 h-7"></i>
           </div>
         </div>
 
@@ -312,39 +319,46 @@
         </div>
         <div class="aqi-scale-labels"><span>Baik</span><span>Sedang</span><span>Sensitif</span><span>Tidak sehat</span><span>Sangat tidak sehat</span><span>Berbahaya</span></div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-5">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
           <div class="aqi-pollutant"><span class="aqi-pollutant-label">PM2.5</span><b id="aqi-pm25" class="aqi-pollutant-value">—</b><small class="aqi-pollutant-unit">µg/m³</small></div>
           <div class="aqi-pollutant"><span class="aqi-pollutant-label">PM10</span><b id="aqi-pm10" class="aqi-pollutant-value">—</b><small class="aqi-pollutant-unit">µg/m³</small></div>
           <div class="aqi-pollutant"><span class="aqi-pollutant-label">Ozon (O₃)</span><b id="aqi-ozone" class="aqi-pollutant-value">—</b><small class="aqi-pollutant-unit">µg/m³</small></div>
           <div class="aqi-pollutant"><span class="aqi-pollutant-label">UV Index</span><b id="aqi-uv" class="aqi-pollutant-value">—</b><small class="aqi-pollutant-unit">indeks</small></div>
         </div>
 
-        <div id="aqi-advice" class="aqi-advice mt-4">Data kualitas udara akan muncul setelah lokasi dipilih.</div>
-        <p id="aqi-meta" class="aqi-meta mt-3">Sumber: Open-Meteo Air Quality API · prakiraan atmosfer, bukan hasil pengukuran sensor lokal.</p>
+        <div id="aqi-advice" class="aqi-advice mt-5">Data kualitas udara akan muncul setelah lokasi dipilih.</div>
+        <p id="aqi-meta" class="aqi-meta mt-3">Sumber: Open-Meteo Air Quality API · prakiraan atmosfer umum.</p>
       </article>
 
       <!-- AQI forecast and insight -->
       <article class="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 min-w-0">
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-4">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
           <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Prakiraan kualitas udara 24 jam</h3>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">US AQI dan konsentrasi PM2.5 per jam</p>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Prakiraan Kualitas Udara</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Tren US AQI dan partikel PM2.5 per jam</p>
           </div>
           <span id="aqi-forecast-badge" class="px-2.5 py-1 text-[10px] font-bold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shrink-0">24 jam</span>
         </div>
-        <div id="aqi-chart-empty" class="aqi-empty">Grafik akan tampil setelah data kualitas udara tersedia.</div>
-        <div id="aqi-chart-wrap" class="aqi-chart-wrap hidden"><canvas id="aqi-chart"></canvas></div>
-        <div id="aqi-insights" class="aqi-insights"><div class="aqi-empty">Insight kualitas udara akan muncul setelah data tersedia.</div></div>
+        
+        <div id="aqi-chart-empty" class="aqi-empty mt-2 flex flex-col items-center justify-center gap-2 py-10">
+          <i data-lucide="bar-chart-2" class="w-6 h-6 text-slate-400 mb-1"></i>
+          Grafik akan tampil setelah data kualitas udara tersedia.
+        </div>
+        <div id="aqi-chart-wrap" class="aqi-chart-wrap hidden mt-2"><canvas id="aqi-chart"></canvas></div>
+        
+        <div id="aqi-insights" class="aqi-insights pt-2">
+          <div class="aqi-empty">Insight kualitas udara akan muncul setelah data tersedia.</div>
+        </div>
       </article>
     </section>
 
     <!-- Section: Predictions Table -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pt-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pt-6">
       <div>
         <p class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Prediksi AI vs Standar</p>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Prediksi 1, 3, 6, dan 24 Jam</h2>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Prediksi Cuaca Berbasis AI</h2>
       </div>
-      <span id="prediction-badge" class="px-3 py-1.5 text-xs font-bold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shrink-0">
+      <span id="prediction-badge" class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shrink-0">
         <div class="w-1.5 h-1.5 rounded-full bg-slate-400"></div> Menunggu Data
       </span>
     </div>
@@ -352,15 +366,14 @@
     <!-- Responsive Table -->
     <section class="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
       <div class="table-container overflow-x-auto w-full">
-        <table class="w-full text-left border-collapse min-w-[500px]">
+        <table class="w-full text-left border-collapse min-w-[550px]">
           <thead>
             <tr class="bg-slate-50 dark:bg-slate-950/50 border-b border-slate-200 dark:border-slate-800">
-              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Waktu ke Depan</th>
-              <!-- Kolom 'Pukul' Dihapus Sesuai Permintaan -->
-              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Prediksi Suhu</th>
-              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Peluang Hujan</th>
-              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Pembanding Standar</th>
-              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Sumber</th>
+              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">Waktu ke Depan</th>
+              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">Prediksi Suhu</th>
+              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">Peluang Hujan</th>
+              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">Pembanding (Standar)</th>
+              <th class="py-4 px-5 text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest whitespace-nowrap">Sumber</th>
             </tr>
           </thead>
           <tbody id="prediction-body" class="divide-y divide-slate-100 dark:divide-slate-800/60">
@@ -380,7 +393,7 @@
         <p class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Grafik Cuaca</p>
         <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Tren Suhu & Potensi Hujan</h2>
       </div>
-      <span class="px-3 py-1.5 text-xs font-bold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hidden sm:inline-block">24 Jam ke Depan</span>
+      <span class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hidden sm:inline-block">24 Jam ke Depan</span>
     </div>
 
     <!-- Charts Grid -->
@@ -421,8 +434,7 @@
         </p>
         <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Tema Cuaca Hari Ini</h2>
         <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-          AI merangkum 24 jam ke depan menjadi 3 tema utama yang memiliki kemiripan cuaca. 
-          Ini membantu Anda melihat pola kapan waktu terbaik untuk aktivitas di luar rumah.
+          AI merangkum 24 jam ke depan menjadi 3 tema utama yang memiliki kemiripan kondisi. Ini akan sangat membantu Anda menentukan kapan waktu terbaik untuk menjemur pakaian, bepergian, atau sekadar bersantai di rumah.
         </p>
       </div>
     </div>
@@ -430,17 +442,17 @@
     <!-- Cluster Grid -->
     <section id="cluster-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
       <div class="col-span-full bg-white dark:bg-slate-900 rounded-2xl p-8 border border-dashed border-slate-300 dark:border-slate-700 text-center text-slate-500 dark:text-slate-400 text-sm font-medium">
-        Tema cuaca akan tampil setelah data cuaca tersedia.
+        Tema cuaca akan tampil setelah data cuaca diproses.
       </div>
     </section>
 
     <!-- Section: Evaluation -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pt-6 border-t border-slate-200 dark:border-slate-800 mt-4">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 pt-6 border-t border-slate-200 dark:border-slate-800 mt-6">
       <div class="max-w-3xl">
         <p class="text-[10px] sm:text-[11px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Evaluasi Sistem</p>
         <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Akurasi Historis</h2>
         <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-          Grafik membandingkan prediksi yang tersimpan dengan data historis ERA5 masa lalu. Data riwayat biasanya memiliki jeda ketersediaan (delay) beberapa hari.
+          Grafik membandingkan prediksi yang tersimpan dengan data historis aktual (ERA5) di masa lalu. Data riwayat aktual biasanya memiliki jeda ketersediaan beberapa hari.
         </p>
       </div>
       <button id="evaluate-btn" onclick="runEvaluation()" disabled 
@@ -451,7 +463,6 @@
 
     <!-- Evaluation Grid -->
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-5 pb-6">
-      
       <!-- Evaluation Chart -->
       <div class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
         <div class="mb-4">
@@ -471,14 +482,13 @@
 
       <!-- Evaluation Stats -->
       <div class="lg:col-span-4 flex flex-col gap-4">
-        
         <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex-1 flex flex-col justify-center">
           <div class="flex items-start gap-4">
             <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
               <i data-lucide="target" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Error Suhu Rata-rata (MAE)</h4>
+              <h4 class="text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">Error Suhu (MAE)</h4>
               <div class="flex items-baseline gap-1">
                 <span class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight" id="eval-mae">--</span>
                 <span class="text-sm text-slate-500 dark:text-slate-400 font-medium">°C</span>
@@ -500,17 +510,15 @@
             </div>
           </div>
         </div>
-        
       </div>
     </section>
-
   </main>
 
   <!-- Footer -->
   <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto py-6">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs font-medium text-slate-500 dark:text-slate-400 text-center sm:text-left">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-[11px] sm:text-xs font-medium text-slate-500 dark:text-slate-400 text-center sm:text-left">
       <p>© 2026 Weather Intelligence. <span class="block sm:inline mt-1 sm:mt-0"><a href="https://github.com/adepanjaitan23/Weather-x-Project" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 hover:underline">GitHub Repository</a></span></p>
-      <p>Weather &amp; air quality by <a href="https://open-meteo.com/" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 hover:underline">Open-Meteo</a> (CC BY 4.0)</p>
+      <p>Weather & air quality by <a href="https://open-meteo.com/" target="_blank" rel="noopener" class="text-blue-600 dark:text-blue-400 hover:underline">Open-Meteo</a> (CC BY 4.0)</p>
     </div>
   </footer>
 
@@ -655,10 +663,10 @@
       const badge = document.getElementById('prediction-badge');
       if (data.mlModelLoaded) {
         badge.innerHTML = `<i data-lucide="cpu" class="w-3.5 h-3.5"></i> AI Model Aktif`;
-        badge.className = 'px-3 py-1.5 text-xs font-bold rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1.5 shrink-0';
+        badge.className = 'px-3 py-1.5 text-[11px] font-bold rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 flex items-center gap-1.5 shrink-0';
       } else {
         badge.innerHTML = `<i data-lucide="cloud" class="w-3.5 h-3.5"></i> API Standar`;
-        badge.className = 'px-3 py-1.5 text-xs font-bold rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 flex items-center gap-1.5 shrink-0';
+        badge.className = 'px-3 py-1.5 text-[11px] font-bold rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800 flex items-center gap-1.5 shrink-0';
       }
       
       document.getElementById('model-notice-title').textContent = data.mlModelLoaded ? `Model Prediksi Aktif (${data.modelVersion})` : 'Menggunakan Prakiraan Standar API';
@@ -712,15 +720,15 @@
       tbody.innerHTML = data.predictions.map(p => {
         const isML = data.mlModelLoaded;
         const sourceClass = isML 
-          ? 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wide'
-          : 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 uppercase tracking-wide';
+          ? 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 uppercase tracking-wide whitespace-nowrap'
+          : 'px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 uppercase tracking-wide whitespace-nowrap';
           
         return `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-            <td class="py-3.5 px-5 text-sm font-bold text-slate-900 dark:text-white">+${p.horizon} Jam</td>
-            <td class="py-3.5 px-5"><span class="font-extrabold text-slate-900 dark:text-white text-base">${fmt(p.temperature,1)}°C</span></td>
-            <td class="py-3.5 px-5"><span class="font-bold text-slate-700 dark:text-slate-300 text-sm">${fmt(p.rainProbability,0)}%</span></td>
-            <td class="py-3.5 px-5 text-xs font-medium text-slate-500 dark:text-slate-400">${fmt(p.apiTemperature,1)}°C <span class="text-slate-300 dark:text-slate-600 mx-1">/</span> ${fmt(p.apiRainProbability,0)}% Hujan</td>
-            <td class="py-3.5 px-5"><span class="${sourceClass}">${safeText(p.source)}</span></td>
+            <td class="py-3.5 px-5 text-sm font-bold text-slate-900 dark:text-white whitespace-nowrap">+${p.horizon} Jam</td>
+            <td class="py-3.5 px-5 whitespace-nowrap"><span class="font-extrabold text-slate-900 dark:text-white text-base">${fmt(p.temperature,1)}°C</span></td>
+            <td class="py-3.5 px-5 whitespace-nowrap"><span class="font-bold text-slate-700 dark:text-slate-300 text-sm">${fmt(p.rainProbability,0)}%</span></td>
+            <td class="py-3.5 px-5 text-xs font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">${fmt(p.apiTemperature,1)}°C <span class="text-slate-300 dark:text-slate-600 mx-1">/</span> ${fmt(p.apiRainProbability,0)}%</td>
+            <td class="py-3.5 px-5 whitespace-nowrap"><span class="${sourceClass}">${safeText(p.source)}</span></td>
           </tr>`;
       }).join('');
     }
@@ -743,7 +751,7 @@
               type: 'line', 
               label: 'Suhu (°C)', 
               data: rows.map(r => r.temperature), 
-              borderColor: '#3b82f6', // Tailwind blue-500
+              borderColor: '#3b82f6', 
               backgroundColor: '#3b82f6', 
               borderWidth: 2.5, 
               pointRadius: 2,
@@ -755,7 +763,7 @@
               type: 'bar', 
               label: 'Peluang Hujan (%)', 
               data: rows.map(r => r.rainProbability), 
-              backgroundColor: isDark ? 'rgba(20, 184, 166, 0.25)' : 'rgba(20, 184, 166, 0.15)', // Tailwind teal-500
+              backgroundColor: isDark ? 'rgba(20, 184, 166, 0.25)' : 'rgba(20, 184, 166, 0.15)',
               borderColor: 'rgba(20, 184, 166, 0.6)', 
               borderWidth: 1, 
               borderRadius: 4, 
@@ -842,41 +850,42 @@
       }
       
       root.innerHTML = clusters.map((c) => {
-        // Icon and Theme Assignment based on data
         let icon = 'cloud';
         let iconBg = 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300';
         let borderHighlight = 'border-slate-200 dark:border-slate-800';
         let insight = 'Kondisi cuaca normal. Aman untuk berbagai aktivitas.';
 
+        // AI Assignment Logic
         if (c.averageRainProbability > 40) {
           icon = 'cloud-rain';
           iconBg = 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400';
           borderHighlight = 'border-blue-200 dark:border-blue-900/50';
-          insight = 'Sedia payung atau jas hujan! Sangat rawan turun hujan.';
+          insight = 'Sedia payung atau jas hujan! Sangat rawan turun hujan pada waktu ini.';
         } else if (c.averageTemperature > 31) {
           icon = 'sun';
           iconBg = 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400';
           borderHighlight = 'border-orange-200 dark:border-orange-900/50';
-          insight = 'Cuaca cerah dan terik. Waktu yang pas untuk menjemur pakaian.';
+          insight = 'Cuaca cerah dan terik. Waktu yang pas untuk menjemur pakaian di luar.';
         } else if (c.averageTemperature < 26) {
           icon = 'cloud';
           iconBg = 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400';
           borderHighlight = 'border-indigo-200 dark:border-indigo-900/50';
-          insight = 'Cuaca cenderung sejuk dan teduh. Nyaman untuk bersantai.';
+          insight = 'Cuaca cenderung sejuk dan teduh. Sangat nyaman untuk bersantai.';
         } else if (c.averageWind > 15) {
           icon = 'wind';
           iconBg = 'bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-400';
           borderHighlight = 'border-teal-200 dark:border-teal-900/50';
-          insight = 'Angin bertiup lumayan kencang. Hati-hati saat berkendara.';
+          insight = 'Angin bertiup lumayan kencang. Hati-hati jika berkendara roda dua.';
         }
 
-        // Handle the "Overlapping / Pukul 00-23" logical presentation
-        let timeDisplay = c.timeDesc ? c.timeDesc : `Total ${c.count} Jam`;
-        let timeSubtext = `Berlangsung selama ${c.count} Jam`;
+        // Logic for scattered times ("rentang waktu lebar / tersebar")
+        let timeDisplay = c.timeDesc ? c.timeDesc : `Total durasi ${c.count} Jam`;
+        let timeSubtext = `Berlangsung total selama ${c.count} jam`;
         
-        // If it's a range (contains '-') we explicitly tell the user it might be scattered
         if (c.timeDesc && c.timeDesc.includes('-')) {
-            timeSubtext = `Tersebar selama ${c.count} jam di rentang ini`;
+            timeSubtext = `Terjadi bergantian (total ${c.count} jam) di rentang ini`;
+        } else if (c.timeDesc && !c.timeDesc.includes('-')) {
+            timeSubtext = `Akan terjadi di titik waktu ini`;
         }
 
         return `
@@ -889,7 +898,7 @@
                  <i data-lucide="${icon}" class="w-5 h-5"></i>
                </div>
                <div>
-                 <p class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">WAKTU KEJADIAN</p>
+                 <p class="text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-0.5">BERLAKU PADA</p>
                  <h4 class="text-sm font-extrabold text-slate-900 dark:text-white">${safeText(timeDisplay)}</h4>
                </div>
              </div>
@@ -900,7 +909,7 @@
             <h3 class="text-base font-extrabold text-slate-900 dark:text-white mb-1.5">${safeText(c.label)}</h3>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium mb-3 flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${timeSubtext}</p>
             
-            <div class="text-xs text-slate-700 dark:text-slate-200 leading-relaxed mb-5 flex-1 bg-blue-50/50 dark:bg-blue-900/20 p-3.5 rounded-xl border border-blue-100/50 dark:border-blue-800/30 flex items-start gap-2.5">
+            <div class="text-[11.5px] text-slate-700 dark:text-slate-200 leading-relaxed mb-5 flex-1 bg-blue-50/50 dark:bg-blue-900/20 p-3.5 rounded-xl border border-blue-100/50 dark:border-blue-800/30 flex items-start gap-2.5">
               <span class="text-blue-500 dark:text-blue-400 shrink-0 mt-0.5"><i data-lucide="lightbulb" class="w-4 h-4"></i></span>
               <span class="font-medium">${insight}</span>
             </div>
@@ -991,7 +1000,7 @@
         badge.className = 'aqi-category aqi-unavailable';
         advice.textContent = 'Data kualitas udara belum berhasil dimuat. Data cuaca dan prediksi cuaca tetap dapat digunakan. ' + (result && result.error ? 'Detail: ' + result.error : '');
         document.getElementById('aqi-meta').textContent = 'Sumber: Open-Meteo Air Quality API. AQI tidak memengaruhi prediksi model cuaca weather-v2.';
-        empty.style.display = 'block';
+        empty.style.display = 'flex';
         chartWrap.style.display = 'none';
         if (aqiChart) { aqiChart.destroy(); aqiChart = null; }
         insightsRoot.innerHTML = '<div class="aqi-empty">Belum ada insight karena data kualitas udara tidak tersedia.</div>';
@@ -1008,13 +1017,13 @@
       badge.textContent = category.label;
       badge.className = 'aqi-category ' + category.css;
       advice.textContent = category.advice;
-      document.getElementById('aqi-meta').textContent = 'Prakiraan atmosfer CAMS · ' + (current.time ? 'Waktu data: ' + String(current.time).replace('T',' ') : 'waktu data tidak tersedia') + ' · resolusi sekitar 11 km; bukan pengukuran sensor lokal.';
+      document.getElementById('aqi-meta').textContent = 'Prakiraan CAMS · ' + (current.time ? 'Diperbarui: ' + String(current.time).replace('T',' ') : 'Waktu tidak tersedia') + ' · Resolusi 11km (bukan sensor lokal).';
 
       const rows = Array.isArray(result.forecast24h) ? result.forecast24h : [];
       document.getElementById('aqi-forecast-badge').textContent = rows.length ? rows.length + ' jam prakiraan' : '24 jam';
+      
       if (!rows.length) {
-        empty.style.display = 'block';
-        empty.textContent = 'Data prakiraan AQI per jam belum tersedia.';
+        empty.style.display = 'flex';
         chartWrap.style.display = 'none';
         if (aqiChart) { aqiChart.destroy(); aqiChart = null; }
       } else {
@@ -1047,21 +1056,21 @@
         items.push({icon:'AQI', text:'Kondisi saat ini: US AQI ' + fmt(current.usAqi,0) + ' (' + category.label + '). ' + category.advice});
       }
       if (current.dominantPollutant) {
-        items.push({icon:'PM', text:'Subindeks polutan tertinggi yang tersedia adalah ' + current.dominantPollutant + ' (subindeks US AQI ' + fmt(current.dominantPollutantAqi,0) + '). Ini adalah indikasi dari keluaran model atmosfer, bukan identifikasi berbasis sensor lokal.'});
+        items.push({icon:'PM', text:'Polutan tertinggi saat ini adalah ' + current.dominantPollutant + ' (subindeks AQI ' + fmt(current.dominantPollutantAqi,0) + '). Dihitung berbasis model satelit/atmosfer.'});
       } else if (current.pm25 !== null && current.pm25 !== undefined) {
-        items.push({icon:'PM', text:'PM2.5 diperkirakan ' + fmt(current.pm25,1) + ' µg/m³. Konsentrasi PM2.5 merupakan indikator polutan tersendiri dan tidak sama dengan nilai AQI.'});
+        items.push({icon:'PM', text:'Kadar PM2.5 diperkirakan ' + fmt(current.pm25,1) + ' µg/m³.'});
       }
       const future = rows.filter(function(r) { return r.usAqi !== null && r.usAqi !== undefined && Number.isFinite(Number(r.usAqi)); });
       if (future.length) {
         const peak = future.reduce(function(a,b) { return Number(b.usAqi) > Number(a.usAqi) ? b : a; });
         const low = future.reduce(function(a,b) { return Number(b.usAqi) < Number(a.usAqi) ? b : a; });
-        items.push({icon:'24h', text:'Dalam prakiraan 24 jam, AQI tertinggi diperkirakan ' + fmt(peak.usAqi,0) + ' sekitar ' + pollutantTimeLabel(peak.time) + ', sedangkan nilai terendah ' + fmt(low.usAqi,0) + ' sekitar ' + pollutantTimeLabel(low.time) + '. Hasil ini merupakan prakiraan model, bukan jaminan kondisi di titik pengguna.'});
+        items.push({icon:'24h', text:'Puncak terburuk diprediksi mencapai AQI ' + fmt(peak.usAqi,0) + ' pada pukul ' + pollutantTimeLabel(peak.time) + '. Sedangkan udara terbaik (AQI ' + fmt(low.usAqi,0) + ') diprediksi sekitar pukul ' + pollutantTimeLabel(low.time) + '.'});
         const nextHours = future.slice(0, Math.min(6, future.length)).map(function(r) { return Number(r.usAqi); }).filter(Number.isFinite);
         if (nextHours.length && current.usAqi !== null && current.usAqi !== undefined && Number.isFinite(Number(current.usAqi))) {
           const avg = nextHours.reduce(function(sum,v) { return sum + v; }, 0) / nextHours.length;
           const delta = avg - Number(current.usAqi);
           const trend = delta >= 15 ? 'cenderung memburuk' : delta <= -15 ? 'cenderung membaik' : 'relatif stabil';
-          items.push({icon:'6h', text:'Rata-rata AQI sekitar 6 jam mendatang diperkirakan ' + fmt(avg,0) + ' dan ' + trend + ' dibandingkan nilai saat ini.'});
+          items.push({icon:'6h', text:'Rata-rata AQI 6 jam mendatang adalah ' + fmt(avg,0) + ', tren kualitas udara ' + trend + ' dibandingkan saat ini.'});
         }
       }
       insightsRoot.innerHTML = items.length
@@ -1217,7 +1226,7 @@
         clusters: [
           { id: 0, count: 6, timeDesc: "Pukul 00.00 - 08.00", label: "Sejuk Malam & Pagi", averageTemperature: 25.4, averageRainProbability: 5, averageHumidity: 82, averageWind: 4.2 },
           { id: 1, count: 9, timeDesc: "Pukul 09.00 - 17.00", label: "Hangat dan Relatif Cerah", averageTemperature: 32.1, averageRainProbability: 2, averageHumidity: 55, averageWind: 11.5 },
-          { id: 2, count: 9, timeDesc: "Pukul 02.00 - 22.00", label: "Berawan / Potensi Hujan", averageTemperature: 28.0, averageRainProbability: 65, averageHumidity: 78, averageWind: 8.0 }
+          { id: 2, count: 9, timeDesc: "Pukul 00.00 - 23.00", label: "Berawan / Potensi Hujan", averageTemperature: 28.0, averageRainProbability: 65, averageHumidity: 78, averageWind: 8.0 }
         ]
       };
     }
