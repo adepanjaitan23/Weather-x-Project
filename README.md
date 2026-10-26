@@ -17,7 +17,8 @@ A weather dashboard powered by **Google Apps Script**, **Google Sheets**, **Open
 
 <!-- Replace GITHUB_ISSUE_IMAGE_URL with the image URL generated after uploading the banner to a GitHub Issue. -->
 <p align="center">
-  <img src="GITHUB_ISSUE_IMAGE_URL" alt="Weather Intelligence Dashboard banner: Weather Forecasting and AQI Insights" width="100%">
+  <img alt="Weather Intelligence Dashboard banner: Weather Forecasting and AQI Insights" 
+    width="100%" src="https://github.com/user-attachments/assets/62bb67f5-10d5-4219-8924-81879f460e45" />
 </p>
 
 ---
