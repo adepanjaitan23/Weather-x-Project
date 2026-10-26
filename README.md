@@ -143,9 +143,6 @@ Lower MAE, RMSE, and Brier score are generally better; higher ROC-AUC and PR-AUC
 ---
 
 <div align="center">
-
-**Built by [adepanjaitan23](https://github.com/adepanjaitan23)**
-
 *Historical data → model training and evaluation → JSON export → parity testing → Apps Script inference → dashboard monitoring*
 
 </div>
